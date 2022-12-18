@@ -1,33 +1,40 @@
-import { GetServerSideProps } from 'next'
-import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import client from '../client'
+import { GetServerSideProps } from "next"
+import { User } from "next-auth"
+import { getSession } from "next-auth/react"
+import client from "../client/client"
+import Home from "../containers/Home"
+import { GetUserDocument } from "../generated/graphql"
 
 interface Props {
-  data: any
+  user: User
 }
 
-export default function Home({  }: Props) {
-  const { data: session } = useSession()
-
-  useEffect(() => {
-    
-  }, [session])
-  
+function Index({ user }: Props) {
   return (
-    <div className='' >
-      
+    <div className="" >
+        <Home user={user} />
     </div>
   )
 }
 
+export const getServerSideProps: GetServerSideProps  = async ({ req }) => {
+  const session = await getSession({ req })
+  const { data } = await client.query(GetUserDocument , { email: session?.user?.email }).toPromise()
 
-export const getServerSideProps: GetServerSideProps = async ({  }) => {
-  const data = await client.fetch(`*[_type == "post"]`)
-  
+  if(!session?.user) {
+    return {
+      props: {},
+      redirect: {
+        destination: '/login'
+      }
+    }
+  }
+
   return {
     props: {
-      data
+      user: data.getUser
     }
   }
 }
+
+export default Index

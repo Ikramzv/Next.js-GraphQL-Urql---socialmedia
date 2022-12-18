@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth/next'
 import GithubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
 // import TwitterProvider from 'next-auth/providers/twitter'
@@ -12,42 +13,24 @@ export const authOptions: NextAuthOptions = {
         }),
         GithubProvider({
             clientId: process.env.NEXT_AUTH_GITHUB_CLIENT_ID as string,
-            clientSecret: process.env.NEXT_AUTH_GITHUB_CLIENT_SECRET as string
+            clientSecret: process.env.NEXT_AUTH_GITHUB_CLIENT_SECRET as string,
+            authorization: {},
         }),
         // TwitterProvider({
         //     clientId: "",
-        //     clientSecret: ""
+        //     clientSecret: "HtBAS58CW7Ci3Lzspe8TgEgQxyF389QxQUkpmzyk0G7KHJvcij",
         // }),
     ],
     callbacks: {
-        jwt({ token , account , isNewUser , profile , user }) {
-            return {
-                ...token,
-                ac:account,
-                isNew:isNewUser,
-                prof: profile,
-                us: user
-            }
+        jwt({ token }) {
+            return token
         },
-        session({ session , token , user }) {
-            console.log("sessio" , session)
+        session({ session , token }) {
             return {
                 ...session,
-                token,
+                // token,
             }
-        }
-    },
-    debug: true,
-    logger: {
-        error(code, metadata) {
-            console.log(code , metadata , "======= ERROR ======")
         },
-        warn(code) {
-            console.log(code , " ===== WARNING ===== ")
-        },
-    },
-    theme: {
-        colorScheme: 'light',
     },
     jwt: {
         maxAge: 60 * 30,
@@ -57,7 +40,6 @@ export const authOptions: NextAuthOptions = {
         strategy: 'jwt',
     },
     secret: process.env.NEXTAUTH_SECRET,
-    useSecureCookies: false
 }
 
 export default NextAuth(authOptions)

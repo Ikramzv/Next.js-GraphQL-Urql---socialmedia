@@ -1,0 +1,8 @@
+mutation Register($options: RegisterUserArgs!) {
+  register(options: $options) {
+    id
+    username
+    email
+    image
+  }
+}

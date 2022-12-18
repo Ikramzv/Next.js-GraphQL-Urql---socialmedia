@@ -1,7 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  purge: ["./pages/**/*.{js,jsx,ts,tsx}", "./components/**/*.{ts,js,tsx,jsx}"],
-  darkMode: false, // or 'media' or 'class'
+  content: [
+    "./containers/**/*.{ts,tsx,js,jsx}",
+    "./pages/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{ts,js,tsx,jsx}",
+  ],
   theme: {
     extend: {
       margin: {
