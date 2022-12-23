@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { BsCamera, BsFillCollectionFill } from 'react-icons/bs'
+import { BsCamera, BsCollection } from 'react-icons/bs'
 import logo from "../assets/logowhite.png"
 import { User } from '../types/types'
 
@@ -20,7 +20,7 @@ function NavbarLinks({ user }: { user: User }) {
           <Link href={`/saves/${user.id}`} >
             <button className='nav_link_button'>
               <span className='nav_link_span'>SAVES</span>
-              <BsFillCollectionFill className='text-xl' />
+              <BsCollection className='text-xl' />
             </button>
           </Link>
           <button className='nav_link_button'>
