@@ -92,7 +92,7 @@ const Login = ({ }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async({ req , res }) => {
+export const getServerSideProps: GetServerSideProps = async({ req }) => {
   const session = await getSession({ req })
   if(!session) {
     return {

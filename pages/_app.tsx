@@ -3,6 +3,9 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Provider } from 'urql'
 import client from '../client/client'
+import Navbar from '../components/Navbar'
+import Sidebar from "../components/Sidebar"
+import Context from '../context/context'
 import "../styles/main.css"
 
 
@@ -13,7 +16,21 @@ export default function App({ Component, pageProps , session }: AppProps & { ses
         <Head>
           <title>Media App</title>
         </Head>
-        <Component {...pageProps} />
+        { pageProps?.session?.user === null ? (
+          <Component {...pageProps} />
+        ) : (
+          <div className='flex md:flex-row flex-col h-screen duration-75 ease-out' >
+          <Context>
+            <Sidebar />
+            <div className='flex pt-[132px] flex-col flex-1 overflow-y-hidden' >
+              <Navbar />
+              <div className='flex-1 bg-slate-50 overflow-y-auto' >
+                <Component {...pageProps} />
+              </div>
+            </div>
+          </Context>
+        </div>
+        ) }
       </Provider>
     </SessionProvider>
   )

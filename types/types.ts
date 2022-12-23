@@ -1,36 +1,32 @@
-interface Image {
-    asset: {
-        url: string
-    }
-}
-
 interface Save {
-    postedBy: User
-    userId: string
+    posts: Post[]
 }
 
 interface Comment {
-    postedBy: User
+    user?: User
+    postId: string
+    userId: string
     comment: string
 }
 
-export interface Pin {
+export interface Post {
+    id: string
     about: string
     title: string
     destination: string
     category: string
-    image: Image
+    image: string
     userId: string,
-    postedBy: User
-    save: Save[]
+    user: User
     comments: Comment[]
 }
 
 export interface User {
     username: string
-    image: Image
-    password: string
+    image: string
     email: string
+    posts?: Post[]
+    saves?: Save[]
     id: string
 }
 
@@ -42,4 +38,9 @@ export interface DecodedToken {
     iat: number 
     exp: number 
     jti: string
+}
+
+export interface ActionType<T> {
+    type: string
+    payload: T
 }

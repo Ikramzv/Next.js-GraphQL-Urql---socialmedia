@@ -85,6 +85,7 @@ export type Query = {
 export type QueryGetUserArgs = {
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -124,10 +125,21 @@ export type RegisterMutation = { __typename?: 'Mutation', register?: { __typenam
 export type GetUserQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
 }>;
 
 
 export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'UserEntity', id: string, username: string, email: string, image: string } | null };
+
+export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'PostEntity', id: string, title: string, description: string, userId: string, user: { __typename?: 'UserEntity', username: string, email: string, image: string, id: string } }> };
+
+export type SavedPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SavedPostsQuery = { __typename?: 'Query', savedPosts: Array<{ __typename?: 'PostEntity', id: string, title: string, description: string, user: { __typename?: 'UserEntity', id: string, username: string, image: string } }> };
 
 
 export const RegisterDocument = gql`
@@ -145,8 +157,8 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const GetUserDocument = gql`
-    query GetUser($email: String, $id: String) {
-  getUser(email: $email, id: $id) {
+    query GetUser($email: String, $id: String, $username: String) {
+  getUser(email: $email, id: $id, username: $username) {
     id
     username
     email
@@ -157,4 +169,42 @@ export const GetUserDocument = gql`
 
 export function useGetUserQuery(options?: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
+};
+export const PostsDocument = gql`
+    query Posts {
+  posts {
+    id
+    title
+    description
+    userId
+    user {
+      username
+      email
+      image
+      id
+    }
+  }
+}
+    `;
+
+export function usePostsQuery(options?: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'>) {
+  return Urql.useQuery<PostsQuery, PostsQueryVariables>({ query: PostsDocument, ...options });
+};
+export const SavedPostsDocument = gql`
+    query SavedPosts {
+  savedPosts {
+    id
+    title
+    description
+    user {
+      id
+      username
+      image
+    }
+  }
+}
+    `;
+
+export function useSavedPostsQuery(options?: Omit<Urql.UseQueryArgs<SavedPostsQueryVariables>, 'query'>) {
+  return Urql.useQuery<SavedPostsQuery, SavedPostsQueryVariables>({ query: SavedPostsDocument, ...options });
 };
