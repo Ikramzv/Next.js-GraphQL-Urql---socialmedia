@@ -15,6 +15,15 @@ export type Scalars = {
   Float: number;
 };
 
+export type CommentEntity = {
+  __typename?: 'CommentEntity';
+  comment: Scalars['String'];
+  id: Scalars['String'];
+  postId: Scalars['String'];
+  user: UserEntity;
+  userId: Scalars['String'];
+};
+
 export type Error = {
   __typename?: 'Error';
   description: Scalars['String'];
@@ -28,18 +37,46 @@ export type LoginUserArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  comment: CommentEntity;
   createPost: PostEntity;
+  deleteComment: Scalars['Boolean'];
+  deletePost: Scalars['Boolean'];
+  like: Scalars['String'];
   login: UserOrError;
   logout: Scalars['Boolean'];
-  register?: Maybe<UserEntity>;
+  refreshAccessToken: Scalars['String'];
+  register: UserOrError;
   savePost: Scalars['Boolean'];
   unsavePost: Scalars['Boolean'];
+  updateComment: CommentEntity;
+  updatePost: PostEntity;
+};
+
+
+export type MutationCommentArgs = {
+  comment: Scalars['String'];
+  postId: Scalars['String'];
 };
 
 
 export type MutationCreatePostArgs = {
   description: Scalars['String'];
   title: Scalars['String'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  commentId: Scalars['String'];
+};
+
+
+export type MutationDeletePostArgs = {
+  postId: Scalars['String'];
+};
+
+
+export type MutationLikeArgs = {
+  postId: Scalars['String'];
 };
 
 
@@ -63,10 +100,23 @@ export type MutationUnsavePostArgs = {
   userId: Scalars['String'];
 };
 
+
+export type MutationUpdateCommentArgs = {
+  comment: Scalars['String'];
+  commentId: Scalars['String'];
+};
+
+
+export type MutationUpdatePostArgs = {
+  options: UpdateArgs;
+};
+
 export type PostEntity = {
   __typename?: 'PostEntity';
+  comments: Array<CommentEntity>;
   description: Scalars['String'];
   id: Scalars['String'];
+  likes: Array<Scalars['String']>;
   title: Scalars['String'];
   user: UserEntity;
   userId: Scalars['String'];
@@ -100,6 +150,12 @@ export type RegisterUserArgs = {
   username: Scalars['String'];
 };
 
+export type UpdateArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  postId: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export type UserEntity = {
   __typename?: 'UserEntity';
   email: Scalars['String'];
@@ -115,12 +171,24 @@ export type UserOrError = {
   error?: Maybe<Error>;
 };
 
+export type PostFragmentFragment = { __typename?: 'PostEntity', id: string, title: string, description: string, likes: Array<string>, user: { __typename?: 'UserEntity', id: string, image: string, username: string }, comments: Array<{ __typename?: 'CommentEntity', comment: string, user: { __typename?: 'UserEntity', id: string, image: string, username: string } }> };
+
+export type UserFragment = { __typename?: 'UserEntity', id: string, image: string, username: string };
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostEntity', id: string, title: string, description: string, likes: Array<string>, user: { __typename?: 'UserEntity', id: string, image: string, username: string }, comments: Array<{ __typename?: 'CommentEntity', comment: string, user: { __typename?: 'UserEntity', id: string, image: string, username: string } }> } };
+
 export type RegisterMutationVariables = Exact<{
   options: RegisterUserArgs;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'UserEntity', id: string, username: string, email: string, image: string } | null };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserOrError', data?: { __typename?: 'UserEntity', id: string, username: string, email: string, image: string } | null, error?: { __typename?: 'Error', title: string, description: string } | null } };
 
 export type GetUserQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']>;
@@ -130,6 +198,13 @@ export type GetUserQueryVariables = Exact<{
 
 
 export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'UserEntity', id: string, username: string, email: string, image: string } | null };
+
+export type PostQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'PostEntity', id: string, title: string, description: string, likes: Array<string>, comments: Array<{ __typename?: 'CommentEntity', comment: string, user: { __typename?: 'UserEntity', id: string, username: string, image: string } }>, user: { __typename?: 'UserEntity', username: string, image: string, id: string } } };
 
 export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -141,14 +216,54 @@ export type SavedPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SavedPostsQuery = { __typename?: 'Query', savedPosts: Array<{ __typename?: 'PostEntity', id: string, title: string, description: string, user: { __typename?: 'UserEntity', id: string, username: string, image: string } }> };
 
+export const UserFragmentDoc = gql`
+    fragment User on UserEntity {
+  id
+  image
+  username
+}
+    `;
+export const PostFragmentFragmentDoc = gql`
+    fragment PostFragment on PostEntity {
+  id
+  title
+  description
+  user {
+    ...User
+  }
+  likes
+  comments {
+    comment
+    user {
+      ...User
+    }
+  }
+}
+    ${UserFragmentDoc}`;
+export const CreatePostDocument = gql`
+    mutation CreatePost($title: String!, $description: String!) {
+  createPost(title: $title, description: $description) {
+    ...PostFragment
+  }
+}
+    ${PostFragmentFragmentDoc}`;
 
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
 export const RegisterDocument = gql`
     mutation Register($options: RegisterUserArgs!) {
   register(options: $options) {
-    id
-    username
-    email
-    image
+    data {
+      id
+      username
+      email
+      image
+    }
+    error {
+      title
+      description
+    }
   }
 }
     `;
@@ -169,6 +284,33 @@ export const GetUserDocument = gql`
 
 export function useGetUserQuery(options?: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
+};
+export const PostDocument = gql`
+    query Post($id: String!) {
+  post(id: $id) {
+    id
+    title
+    description
+    likes
+    comments {
+      comment
+      user {
+        id
+        username
+        image
+      }
+    }
+    user {
+      username
+      image
+      id
+    }
+  }
+}
+    `;
+
+export function usePostQuery(options: Omit<Urql.UseQueryArgs<PostQueryVariables>, 'query'>) {
+  return Urql.useQuery<PostQuery, PostQueryVariables>({ query: PostDocument, ...options });
 };
 export const PostsDocument = gql`
     query Posts {
