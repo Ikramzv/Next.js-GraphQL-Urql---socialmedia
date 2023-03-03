@@ -22,7 +22,7 @@ export default function App({ Component, pageProps , session }: AppProps & { ses
           <div className='flex md:flex-row flex-col h-screen duration-75 ease-out' >
           <Context>
             <Sidebar />
-            <div className='flex pt-[132px] flex-col flex-1 overflow-y-hidden' >
+            <div className='flex pt-[128px] flex-col flex-1 overflow-y-hidden' >
               <Navbar />
               <div className='flex-1 bg-slate-50 overflow-y-auto' >
                 <Component {...pageProps} />
