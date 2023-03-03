@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "440",
+      },
       margin: {
         320: "320px",
       },
@@ -90,6 +93,7 @@ module.exports = {
     cursor: {
       "zoom-in": "zoom-in",
       pointer: "pointer",
+      auto: "auto",
     },
   },
   variants: {
