@@ -64,3 +64,27 @@ body {
 .nav_link_span {
     @apply hidden sm:block font-semibold
 }
+
+.form_div {
+    @apply flex flex-col gap-2 bg-slate-50 p-2 sm:p-3 rounded-md
+}
+
+.form_input {
+    @apply p-2 text-gray-900 rounded-md outline-none border-2 focus:border-orange-400 duration-200
+}
+
+.form_error {
+    @apply text-red-600 text-sm duration-75
+}
+
+.form_error::after {
+    content: " !";
+}
+
+.active_button {
+    @apply duration-200 active:scale-75 rounded-md py-1 px-5 border-2
+}
+
+.flex_center {
+    @apply flex items-center justify-center
+}
