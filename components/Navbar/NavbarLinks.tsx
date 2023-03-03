@@ -1,9 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { BsCamera, BsCollection } from 'react-icons/bs'
-import logo from "../assets/logowhite.png"
-import { User } from '../types/types'
+import { BsCollection } from 'react-icons/bs'
+import logo from "../../assets/logowhite.png"
+import { User } from '../../types/types'
+import NavbarPostLink from './NavbarPostLink'
 
 
 function NavbarLinks({ user }: { user: User }) {
@@ -23,10 +24,7 @@ function NavbarLinks({ user }: { user: User }) {
               <BsCollection className='text-xl' />
             </button>
           </Link>
-          <button className='nav_link_button'>
-            <span className='nav_link_span'>POST</span>
-            <BsCamera className='text-xl' />
-          </button>
+          <NavbarPostLink />
         </div>
     </>
   )

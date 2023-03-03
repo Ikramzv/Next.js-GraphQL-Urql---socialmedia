@@ -2,7 +2,7 @@ import { HiMenu } from 'react-icons/hi'
 import { useSidebarState } from '../context/sidebar/context'
 import { SIDEBAR_ACTION_TYPES } from '../context/sidebar/reducer'
 import { useUserState } from '../context/user/context'
-import NavbarLinks from './NavbarLinks'
+import NavbarLinks from './Navbar/NavbarLinks'
 
 
 function Navbar() {
