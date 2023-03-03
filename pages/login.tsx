@@ -64,7 +64,7 @@ const Login = ({ }: Props) => {
                     buttonText={"Submit"}
                     type="submit"
                     className={
-                      "button md:px-3 md:py-2 border border-gray-900 text-gray-900 !bg-mainColor hover:!bg-slate-400 hover:text-black"
+                      "button md:!px-3 md:!py-2 border border-gray-900 text-gray-900 !bg-mainColor hover:!bg-slate-400 hover:text-black"
                     }
                   />
                 </form>
